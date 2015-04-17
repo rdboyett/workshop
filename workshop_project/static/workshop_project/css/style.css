@@ -1,0 +1,12 @@
+
+.searchButton {
+  color: #000;
+  background: none;
+  border: none;
+  float: right;
+  margin: -33px 5px 0 0;
+  opacity: 0.6;
+}
+.searchButton:hover {opacity: 1;}
+
+.error {color:#ee5f5b;}

@@ -1,0 +1,43 @@
+<style>
+    table, th, td {
+   border: 1px solid black;
+    }
+    th, td {padding: 10px;}
+</style>
+
+{% load my_tags %}
+{% if mySessions %}
+<div style="float: left; width: 100%; padding: 20px;">
+    <div style="float: left;margin:5px;width: 45%;">
+        <h1>{{ userInfo.user.first_name|capfirst }} {{ userInfo.user.last_name|capfirst|possession }} Shedule</h1>
+    </div>
+</div>
+<div style="float: left; width: 100%;padding: 20px 20px 20px 40px;border-top: 1px solid #000;border-bottom: 1px solid #000">
+   
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for session in mySessions %}
+                  <tr>
+                    <td>{{ session.classDate|date }}</td>
+                    <td>{{ session.name|title }}</td>
+                    <td>{{ session.startTime|time }}</td>
+                    <td>{{ session.endTime|time }}</td>
+                    <td>{{ session.location }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+   
+</div>
+{% else %}
+    Sorry, there are no sessions in your schedule.<br>
+{% endif %}

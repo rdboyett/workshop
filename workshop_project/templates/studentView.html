@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load my_tags %}
+
+    {% block title %}Indian Workshop | dashboard{% endblock %}
+
+
+{% block body %}
+        {% if userInfo.teacher %}
+        
+        <h1>{% if currentUser %}{{currentUser.user.first_name|capfirst }} {{currentUser.user.last_name|capfirst|possession }} Schedule{% else %}All Students{% endif %}</h1>
+        {% if user.email == 'jholland@alvaradoisd.net' or user.email == 'jhenderson@alvaradoisd.net' or user.email == 'rboyett@alvaradoisd.net' %}
+        <div class="btn btn-success" data-toggle="modal" data-target="#createSession">create a new session</div>
+        {% endif %}
+        <a href="{% url "workshop_project.views.classView" %}" class="btn btn-warning">explore sessions</a>
+        {% if currentUser %}
+        <a href="{% url "workshop_project.views.studentView" %}" class="btn btn-danger">explore all students</a>
+        <button id="studentPrintbtn" class="btn btn-success pull-right" data-options='{"studentID":"{{currentUser.id}}"}'><i class="fa fa-print"></i>  Print {{currentUser.user.first_name|capfirst|possession }} Schedule</button>
+        {%endif%}
+      </div>
+      
+      <div class="panel">
+            <div class="panel-body">
+      {% if currentUser %}
+        {% if currentUser.classrooms.all %}
+              <table class="table table-striped" data-toggle="table" data-search="true" 
+        data-pagination="true">
+                <thead>
+                  <tr>
+                    <th data-field="date" data-sortable="true">Date <i class="fa fa-sort pull-right"></i></th>
+                    <th data-field="name" data-sortable="true">Name <i class="fa fa-sort pull-right"></th>
+                    <th data-field="startTime" data-sortable="true">Start Time <i class="fa fa-sort pull-right"></th>
+                    <th data-field="endTime" data-sortable="true">End Time <i class="fa fa-sort pull-right"></th>
+                    <th data-field="location" data-sortable="true">Location <i class="fa fa-sort pull-right"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for session in currentUser.classrooms.all %}
+                  <tr>
+                    <td>{{ session.classDate|date }}</td>
+                    <td>{{ session.name|title }}</td>
+                    <td>{{ session.startTime|time }}</td>
+                    <td>{{ session.endTime|time }}</td>
+                    <td>{{ session.location }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+        {% else %}
+          This student does not have any sessions scheduled.
+        {% endif %}
+      {% elif userInfos %}
+              <table class="table table-striped" data-toggle="table" data-search="true" 
+        data-pagination="true">
+                <thead>
+                  <tr>
+                    <th data-field="firstName" data-sortable="true">Last Name <i class="fa fa-sort pull-right"></th>
+                    <th data-field="lastName" data-sortable="true">First Name <i class="fa fa-sort pull-right"></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for userInfo in userInfos %}
+                  <tr>
+                    <td>{{ userInfo.user.last_name|capfirst }}</td>
+                    <td>{{ userInfo.user.first_name|capfirst }}</td>
+                    <td>
+                      <a href="{% url "workshop_project.views.studentView" userInfo.id %}" class="btn btn-warning">view schedule</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+      {% else %}
+        Sorry, there are currently no sessions created.
+      {% endif %}
+            </div>
+      </div>
+      
+      
+      
+      {% endif %}
+</div> <!-- End of Main-Content -->
+
+{% endblock %}

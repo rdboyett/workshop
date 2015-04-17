@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+    {% block title %}Indian Workshop | dashboard{% endblock %}
+
+
+{% block body %}
+        <h1>My Schedule</h1>
+        
+        {% if user.email == 'jholland@alvaradoisd.net' or user.email == 'jhenderson@alvaradoisd.net' or user.email == 'rboyett@alvaradoisd.net' %}
+        <div class="btn btn-success" data-toggle="modal" data-target="#createSession">create a new session</div>
+        {% endif %}
+        <a href="{% url "workshop_project.views.classView" %}" class="btn btn-warning">explore sessions</a>
+        {% if userInfo.teacher %}
+        <a href="{% url "workshop_project.views.studentView" %}" class="btn btn-danger">explore students</a>
+        {% endif %}
+        <button id="mySchedulePrintBtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>  Print My Schedule</button>
+      </div>
+      
+      <div class="panel">
+            <div class="panel-body">
+            {% if mySessions %}
+              <table class="table table-striped" data-toggle="table" data-search="true" 
+        data-pagination="true">
+                <thead>
+                  <tr>
+                    <th data-field="date" data-sortable="true">Date <i class="fa fa-sort pull-right"></i></th>
+                    <th data-field="name" data-sortable="true">Name <i class="fa fa-sort pull-right"></th>
+                    <th data-field="startTime" data-sortable="true">Start Time <i class="fa fa-sort pull-right"></th>
+                    <th data-field="endTime" data-sortable="true">End Time <i class="fa fa-sort pull-right"></th>
+                    <th data-field="location" data-sortable="true">Location <i class="fa fa-sort pull-right"></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for session in mySessions %}
+                  <tr{% if session.classDate < today %} class="text-primary"{% endif %}>
+                    <td>{{ session.classDate|date }}</td>
+                    <td>{{ session.name|title }}</td>
+                    <td>{{ session.startTime|time }}</td>
+                    <td>{{ session.endTime|time }}</td>
+                    <td>{{ session.location }}</td>
+                    <td>
+                      <div class="btn {% if session.classDate < today %}btn-info{%else%}btn-danger{% endif %} addSessionBtn" data-options='{"sessionID":"{{session.id}}"}'>{% if session.classDate < today %}ARCHIVE{%else%}remove{% endif %}</div>
+                      
+                      <a href="{% url "workshop_project.views.classView" session.id %}" class="btn btn-warning">view</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% else %}
+              Sorry, you have now sessions scheduled.
+              <a href="{% url "workshop_project.views.classView" %}" class="btn btn-warning">find a session</a>
+            {% endif %}
+            </div>
+      </div>
+      
+      
+      
+      
+</div> <!-- End of Main-Content -->
+
+{% endblock %}
