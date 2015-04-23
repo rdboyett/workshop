@@ -60,6 +60,19 @@ $(document).ready(function(){
             timeout:   4000 
         });
     
+    $("#cloneSession-form").ajaxForm({ 
+            success:       function(responseText){
+                console.log(responseText);
+                if (responseText.error) {
+                    alert(responseText.error);
+                }else{
+                    window.location.href = "/classView/"+responseText.groupID+"/";
+                }
+            },
+            dataType:  'json',
+            timeout:   4000 
+        });
+    
     
     
     
