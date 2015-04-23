@@ -418,7 +418,7 @@ def addSession(request):
             allClasses = False
         
         
-        #get the the class with that joinCode
+        #get the the class with that id
         if Classroom.objects.filter(id=sessionID):
             newClass = Classroom.objects.get(id=sessionID)
                 
@@ -439,20 +439,75 @@ def addSession(request):
                 #check to see if you are allowed to join
                 if newClass.allowJoin:
                     if addRemove == 'add':
+                        
                         #Check if the class is full
                         if not newClass.classFull:
-                            userInfo.classrooms.add(newClass)
-                            #Now add to class size and check if full
-                            if newClass.classSize < 0:
-                                newClass.classSize = 0
+                            #You are checking that the user doesn't already have a session scheduled for the same time and date.
+                            #You are also checking that the user doesn't already have a session with the same name and location
+                            #Check if user has a session already during this date, time and location.
+                            #Check if user has already signed up for the session with the same name, location and date.
+                            #The 2 the above they have in common are date and location EXCLUDE THE CURRENT CLASS
+                                #Then check individually for same time different location
+                                #Then check individually for same name
                             
-                            newClass.classSize +=1
-                            if newClass.classSize >= newClass.classLimit:  #then class is full
-                                newClass.classFull = True
+                            #Name and location check
+                            #You are also checking that the user doesn't already have a session with the same name and location.
+                            if Classroom.objects.filter(classuser__id=userInfo.id, name=newClass.name, location=newClass.location):
+                                mySessions = Classroom.objects.filter(classuser__id=userInfo.id, name=newClass.name, location=newClass.location)
+                                for session in mySessions:
+                                    data = {'error':'Sorry, you already have session: '+session.name+' scheduled from '+session.startTime.strftime('%H:%M %p')+' to '+session.endTime.strftime('%H:%M %p')+' at that location. Your new session has the same name and location. Please remove the old session first or find a new session.'}
+                                    return HttpResponse(json.dumps(data))
                                 
-                            newClass.save()
+                                
+                            #You are checking that the user doesn't already have a session scheduled for the same time and date.
+                            elif Classroom.objects.filter(classuser__id=userInfo.id, classDate=newClass.classDate):
+                                mySessions = Classroom.objects.filter(classuser__id=userInfo.id, classDate=newClass.classDate)
+                                bFoundSession = False
+                                for session in mySessions:
+                                    if newClass.startTime >= session.startTime and newClass.startTime < session.endTime:
+                                        #log.info('Session: '+session.name+' is already happening from '+session.startTime.strftime('%H:%I %p')+' to '+session.endTime.strftime('%H:%I %p')+' at that location.')
+                                        data = {'error':'Sorry, you already have session: '+session.name+' scheduled from '+session.startTime.strftime('%H:%M %p')+' to '+session.endTime.strftime('%H:%M %p')+' during that time. Your new session starts during this scheduled session. Please remove the old session first or find a new session.'}
+                                        bFoundSession = True
+                                    elif newClass.endTime >= session.startTime and newClass.endTime < session.endTime:
+                                        #log.info('Session: '+session.name+' is already happening from '+session.startTime.strftime('%H:%I %p')+' to '+session.endTime.strftime('%H:%I %p')+' at that location.')
+                                        data = {'error':'Sorry, you already have session: '+session.name+' scheduled from '+session.startTime.strftime('%H:%M %p')+' to '+session.endTime.strftime('%H:%M %p')+' during that time. Your new session runs into this scheduled session. Please remove the old session first or find a new session.'}
+                                        bFoundSession = True
+                                    elif newClass.startTime <= session.startTime and newClass.endTime >= session.endTime:
+                                        #log.info('Session: '+session.name+' is already happening from '+session.startTime.strftime('%H:%I %p')+' to '+session.endTime.strftime('%H:%I %p')+' at that location.')
+                                        data = {'error':'Sorry, you already have session: '+session.name+' scheduled from '+session.startTime.strftime('%H:%M %p')+' to '+session.endTime.strftime('%H:%M %p')+' during that time. Your new session envelopes this scheduled session. Please remove the old session first or find a new session.'}
+                                        bFoundSession = True
+                                        
+                                if bFoundSession:
+                                    return HttpResponse(json.dumps(data))
+                                else:
+                                    userInfo.classrooms.add(newClass)
+                                    #Now add to class size and check if full
+                                    if newClass.classSize < 0:
+                                        newClass.classSize = 0
+                                    
+                                    newClass.classSize +=1
+                                    if newClass.classSize >= newClass.classLimit:  #then class is full
+                                        newClass.classFull = True
+                                        
+                                    newClass.save()
+                                    
+                                    data = {'groupID': newClass.id,}
+                                    
+        
                             
-                            data = {'groupID': newClass.id,}
+                            else:
+                                userInfo.classrooms.add(newClass)
+                                #Now add to class size and check if full
+                                if newClass.classSize < 0:
+                                    newClass.classSize = 0
+                                
+                                newClass.classSize +=1
+                                if newClass.classSize >= newClass.classLimit:  #then class is full
+                                    newClass.classFull = True
+                                    
+                                newClass.save()
+                                
+                                data = {'groupID': newClass.id,}
                             
                             
                         else:
