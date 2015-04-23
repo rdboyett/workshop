@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     
     'google_login',
     'classrooms',
+    'adminUsers',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load adminUser_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -109,7 +110,7 @@
       BASE MODAL POPUPS
       *********************************************************************************************************************************************************** -->
 
-{% if user.email == 'jholland@alvaradoisd.net' or user.email == 'jhenderson@alvaradoisd.net' or user.email == 'rboyett@alvaradoisd.net' %}
+{% if user.email|isAdminUser %}
 <!-------------------------------------- Get Teacher Campus Popup ---------------------------------->
 <div id="createSession" class="modal fade" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
   <div class="modal-dialog">

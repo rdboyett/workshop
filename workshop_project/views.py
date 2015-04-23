@@ -15,6 +15,11 @@ from google_login.models import GoogleUserInfo
 
 
 
+import logging
+log = logging.getLogger(__name__)
+
+
+
 def index(request):
     if 'user_id' in request.session:
         user_id = request.session['user_id']
@@ -34,9 +39,32 @@ def index(request):
 @login_required
 def dashboard(request):
     userInfo = ClassUser.objects.get(user=request.user)
+    
+    availableClassTimes = []
+    availableTimeSlots = []
         
     if userInfo.classrooms.all():
         mySessions = userInfo.classrooms.all()
+        possibleDates = []
+        for session in mySessions:
+            if session.classDate not in possibleDates:
+                possibleDates.append(session.classDate)
+        
+        #Check each date against all available classes
+        if possibleDates:
+            for date in possibleDates:
+                startTimes_to_exclude = [x.startTime for x in mySessions.filter(classDate=date)]
+                if Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude):
+                    allClasses = Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude).order_by('name')
+                    availableClassTimes.extend(allClasses)
+                    
+            tempDateTime = []
+            for currentClass in availableClassTimes:
+                currentClassDateTime = datetime.datetime.combine(currentClass.classDate, currentClass.startTime)
+                if currentClassDateTime not in tempDateTime:
+                    tempDateTime.append(currentClassDateTime)
+                    availableTimeSlots.append(currentClass)
+        
     else:
         mySessions = False
         
@@ -46,6 +74,7 @@ def dashboard(request):
             'dashboard':True,
             'mySessions':mySessions,
             'today':datetime.date.today(),
+            'availableTimeSlots':availableTimeSlots,
         }
     args.update(csrf(request))
     
@@ -56,6 +85,14 @@ def dashboard(request):
 @login_required
 def classView(request, classID=False):
     userInfo = ClassUser.objects.get(user=request.user)
+    
+    bPostSort=False
+    if request.method == 'POST':
+        date = request.POST['date'].strip()
+        startTime = request.POST['startTime'].strip()
+        bPostSort = True
+        
+        
         
     if userInfo.classrooms.all():
         mySessions = userInfo.classrooms.all()
@@ -66,6 +103,9 @@ def classView(request, classID=False):
         if Classroom.objects.filter(id=classID):
             currentSession = Classroom.objects.get(id=classID)
             sessions = False
+    elif bPostSort and Classroom.objects.filter(active=True, classDate=date, startTime=startTime):
+        sessions = Classroom.objects.filter(active=True, classDate=date, startTime=startTime)
+        currentSession = False
     elif Classroom.objects.filter(active=True, classDate__gte=datetime.date.today()):
         sessions = Classroom.objects.filter(active=True, classDate__gte=datetime.date.today())
         currentSession = False
@@ -96,8 +136,8 @@ def studentView(request, studentID=False):
         if ClassUser.objects.filter(id=studentID):
             currentUser = ClassUser.objects.get(id=studentID)
             userInfos = False
-    elif ClassUser.objects.all():
-        userInfos = ClassUser.objects.all()
+    elif ClassUser.objects.filter(teacher=False):
+        userInfos = ClassUser.objects.filter(teacher=False)
         currentUser = False
     else:
         currentUser = False

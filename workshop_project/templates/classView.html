@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load my_tags %}
+{% load adminUser_tags %}
 
     {% block title %}Indian Workshop | dashboard{% endblock %}
 
@@ -8,11 +9,11 @@
 {% block body %}
         
         <h1>{% if currentSession %}Session: {{ currentSession.name|title }} {%else%}All Active Sessions{%endif%}</h1>
-        {% if user.email == 'jholland@alvaradoisd.net' or user.email == 'jhenderson@alvaradoisd.net' or user.email == 'rboyett@alvaradoisd.net' %}
+        {% if user.email|isAdminUser %}
         <div class="btn btn-success" data-toggle="modal" data-target="#createSession">create a new session</div>
         {% endif %}
         {% if currentSession %}
-          {% if user.email == 'jholland@alvaradoisd.net' or user.email == 'jhenderson@alvaradoisd.net' or user.email == 'rboyett@alvaradoisd.net' %}
+          {% if user.email|isAdminUser %}
           <div class="btn btn-danger" data-toggle="modal" data-target="#editSession">edit this session</div>
           {% endif %}
           <a href="{% url "workshop_project.views.classView" %}" class="btn btn-info">view all sessions</a>
@@ -77,7 +78,7 @@
         </div>
       {% elif sessions %}
               <table class="table table-striped" data-toggle="table" data-search="true" 
-        data-pagination="true">
+        data-pagination="true" data-sort-name="date" data-sort-order="asc">
                 <thead>
                   <tr>
                     <th data-field="date" data-sortable="true">Date <i class="fa fa-sort pull-right"></i></th>
@@ -133,7 +134,7 @@
 {% block modal %}
 
 {% if currentSession %}
-  {% if user.email == 'jholland@alvaradoisd.net' or user.email == 'jhenderson@alvaradoisd.net' or user.email == 'rboyett@alvaradoisd.net' %}
+  {% if user.email|isAdminUser %}
 <!-------------------------------------- Get Teacher Campus Popup ---------------------------------->
 <div id="editSession" class="modal fade" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
   <div class="modal-dialog">
