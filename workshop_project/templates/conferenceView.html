@@ -17,6 +17,9 @@
         <a href="{% url "workshop_project.views.studentView" %}" class="btn btn-danger">explore students</a>
         <button id="textLoadbtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>  Print All Session Rosters</button>
         {% endif %}
+          {% if user.email|isAdminUser %}
+            <a href="{% url "classrooms.ajax.unscheduled" %}" target="unscheduled" class="btn btn-danger pull-right" style="">Check for Unscheduled students</a>
+          {% endif %}
       </div>
       
       
@@ -25,10 +28,11 @@
       {% if sessionTables %}
         {% for table in sessionTables %}
           <h3>{{table.date}}</h3>
+          {% if user.email|isAdminUser %}
           <div class="pull-right"  style="margin-top: -40px;">
             <button class="btn btn-danger">lock all sessions for this date</button>
-            <a href="{% url "classrooms.ajax.unscheduled" %}" target="unscheduled" class="btn btn-danger">Check for Unscheduled students</a>
           </div>
+          {% endif %}
               <table class="table table-striped">
                 <thead>
                   <tr>
