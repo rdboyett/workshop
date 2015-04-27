@@ -54,7 +54,7 @@ class Classroom(models.Model):
     
     
     class Meta:
-        ordering = ['classDate', 'location', 'startTime']
+        ordering = ['classDate', 'startTime']
 
 class ClassUser(models.Model):
     user = models.ForeignKey(User)

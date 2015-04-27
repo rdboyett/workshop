@@ -612,15 +612,25 @@ def editSession(request):
 
 
 @login_required
-def allSessionsPrint(request):
-    if Classroom.objects.filter(classDate__gte=datetime.date.today()):
+def allSessionsPrint(request, sessionID=False):
+    if sessionID:
+        if Classroom.objects.filter(id=sessionID):
+            oneSession = Classroom.objects.get(id=sessionID)
+        else:
+            oneSession = False
+        
+        sessions = False
+    elif Classroom.objects.filter(classDate__gte=datetime.date.today()):
         sessions = Classroom.objects.filter(classDate__gte=datetime.date.today())
+        oneSession = False
     else:
         sessions = False
+        oneSession = False
     
     
     args = {
             'sessions':sessions,
+            'oneSession':oneSession,
         }
     
     return render_to_response("classrooms/allSessions.html", args)

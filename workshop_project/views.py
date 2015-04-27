@@ -157,6 +157,85 @@ def studentView(request, studentID=False):
 
 
 
+@login_required
+def conferenceView(request):
+    userInfo = ClassUser.objects.get(user=request.user)
+    '''
+    #I'me creating a table by room(heading) and startTime(on left side)
+    
+    #need to first get all possible locations by date
+    availableLocations = []
+    
+    #first get all possible dates for sessions
+    if Classroom.objects.filter(active=True, classDate__gte=datetime.date.today()):
+        allSessions = Classroom.objects.filter(active=True, classDate__gte=datetime.date.today())
+        possibleDates = []
+        for session in allSessions:
+            if session.classDate not in possibleDates:
+                possibleDates.append(session.classDate)
+        
+        #Next get possible locations
+        
+        if possibleDates:
+            for date in possibleDates:
+                startTimes_to_exclude = [x.startTime for x in mySessions.filter(classDate=date)]
+                if Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude):
+                    allClasses = Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude).order_by('name')
+                    availableClassTimes.extend(allClasses)
+                    
+            tempDateTime = []
+            for currentClass in availableClassTimes:
+                currentClassDateTime = datetime.datetime.combine(currentClass.classDate, currentClass.startTime)
+                if currentClassDateTime not in tempDateTime:
+                    tempDateTime.append(currentClassDateTime)
+                    availableTimeSlots.append(currentClass)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        #Check each date against all available classes
+        if possibleDates:
+            for date in possibleDates:
+                startTimes_to_exclude = [x.startTime for x in mySessions.filter(classDate=date)]
+                if Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude):
+                    allClasses = Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude).order_by('name')
+                    availableClassTimes.extend(allClasses)
+                    
+            tempDateTime = []
+            for currentClass in availableClassTimes:
+                currentClassDateTime = datetime.datetime.combine(currentClass.classDate, currentClass.startTime)
+                if currentClassDateTime not in tempDateTime:
+                    tempDateTime.append(currentClassDateTime)
+                    availableTimeSlots.append(currentClass)
+        
+    '''
+    
+    testDict = [{'date':'2015-04-24', 'rooms':['room 1', 'room2', 'room 3']},{'date':'2015-04-25', 'rooms':['room 4', 'room 5', 'room 6']},]
+    
+    
+    if Classroom.objects.filter(active=True, classDate__gte=datetime.date.today()):
+        sessions = Classroom.objects.filter(active=True, classDate__gte=datetime.date.today())
+    else:
+        sessions = False
+        
+        
+    args = {
+            'user':request.user,
+            'userInfo':userInfo,
+            'sessions':sessions,
+            'testDict':testDict,
+        }
+    args.update(csrf(request))
+    
+    return render_to_response("conferenceView.html", args)
+
 
 
 

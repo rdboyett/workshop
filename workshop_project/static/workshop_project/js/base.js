@@ -166,6 +166,12 @@ $(document).ready(function(){
     });
     
     
+    $("#oneSessionLoadbtn").click(function(){
+	var sessionID = $(this).data("options").sessionID;
+	w = window.open('/class/allSessionsPrint/'+sessionID);
+	w.print();
+    });
+    
     
     
     

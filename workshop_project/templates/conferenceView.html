@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load my_tags %}
+{% load adminUser_tags %}
+
+    {% block title %}Indian Workshop | dashboard{% endblock %}
+
+
+{% block body %}
+        
+        <h1>Conference View</h1>
+        {% if user.email|isAdminUser %}
+        <div class="btn btn-success" data-toggle="modal" data-target="#createSession">create a new session</div>
+        {% endif %}
+        <a href="{% url "workshop_project.views.classView" %}" class="btn btn-info">view all sessions</a>
+        {% if userInfo.teacher %}
+        <a href="{% url "workshop_project.views.studentView" %}" class="btn btn-danger">explore students</a>
+        <button id="textLoadbtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>  Print All Session Rosters</button>
+        {% endif %}
+      </div>
+      
+      
+      <div class="panel">
+            <div class="panel-body">
+      {% if testDict %}
+        {% for item in testDict %}
+          <div> Here is the date: {{item.date}} and this is the room loop:</div>
+          {% for room in item.rooms %}
+            <div>{{room}}</div>
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
+              
+              
+      {% if NOsessions %}
+              <table class="table table-striped" data-toggle="table" data-search="true" 
+        data-pagination="true" data-sort-name="date" data-sort-order="asc">
+                <thead>
+                  <tr>
+                    <th data-field="date" data-sortable="true">Date <i class="fa fa-sort pull-right"></i></th>
+                    <th data-field="name" data-sortable="true">Name <i class="fa fa-sort pull-right"></th>
+                    <th data-field="startTime" data-sortable="true">Start Time <i class="fa fa-sort pull-right"></th>
+                    <th data-field="endTime" data-sortable="true">End Time <i class="fa fa-sort pull-right"></th>
+                    <th data-field="location" data-sortable="true">Location <i class="fa fa-sort pull-right"></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for session in sessions %}
+                  <tr>
+                    <td>{{ session.classDate|date }}</td>
+                    <td>{{ session.name|title }}</td>
+                    <td>{{ session.startTime|time }}</td>
+                    <td>{{ session.endTime|time }}</td>
+                    <td>{{ session.location }}</td>
+                    <td>
+                      {% if session in mySessions %}
+                      <div class="btn btn-danger addSessionBtn" data-options='{"sessionID":"{{session.id}}"}'>remove</div>
+                      {% else %}
+                        {% if session.classFull %}
+                      <div class="btn btn-danger disabled">SESSION FULL</div>
+                        {% else %}
+                      <div class="btn btn-success addSessionBtn" data-options='{"sessionID":"{{session.id}}"}'>add</div>
+                        {% endif %}
+                      {% endif %}
+                      
+                      <a href="{% url "workshop_project.views.classView" session.id %}" class="btn btn-warning">view</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+      {% else %}
+        Sorry, there are currently no sessions created.
+      {% endif %}
+            </div>
+      </div>
+      
+      
+      
+      
+      
+</div> <!-- End of Main-Content -->
+
+{% endblock %}
+
+
+

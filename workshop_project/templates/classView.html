@@ -23,7 +23,11 @@
         {%endif%}
         {% if userInfo.teacher %}
         <a href="{% url "workshop_project.views.studentView" %}" class="btn btn-danger">explore students</a>
-        <button id="textLoadbtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>  Print All Session Rosters</button>
+          {% if currentSession %}
+            <button id="oneSessionLoadbtn" class="btn btn-success pull-right" data-options='{"sessionID":"{{currentSession.id}}"}'><i class="fa fa-print"></i>  Print Current Session Roster</button>
+          {% else %}
+            <button id="textLoadbtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>  Print All Session Rosters</button>
+          {% endif %}
         {% endif %}
       </div>
       

@@ -12,8 +12,34 @@
 
 <body>
 
-
-    {% if sessions %}
+    {% if oneSession %}
+    <div style="float: left; width: 100%; padding: 20px;">
+        <div style="float: left;margin:5px;width: 45%;">
+            <h1>Session:  {{ oneSession.name|title }}</h1>
+            <h5>Description: {{oneSession.description}}</h5>
+        </div>
+        <div style="float: right;width: 45%;">
+            <div><h3>date:  {{ oneSession.classDate|date }}</h3></div>
+            <div><h3>time:  {{ oneSession.startTime|time }} to {{ oneSession.endTime|time }}</h3></div>
+            <div><h3>location: {{ oneSession.location }}</h3></div>
+        </div>
+    </div>
+    <div style="float: left; width: 100%;padding: 20px 20px 20px 40px;border-top: 1px solid #000;border-bottom: 1px solid #000">
+        <div>Class Roster:</div><br>
+       {% if oneSession.classuser_set.all %}
+           {% if oneSession.classFull %}
+                <br>
+        <div><h1 style="color:red;">CLASS IS FULL WITH {{ oneSession.classSize }}.</h1></div>
+            <br>
+           {% endif %}
+           {% for userInfo in oneSession.classuser_set.all %}
+        <div>{{forloop.counter}}.  {{ userInfo.user.first_name|capfirst }} {{ userInfo.user.last_name|capfirst }}</div>
+           {% endfor %}
+       {% endif %}
+    </div>
+    <p class="break">page {{ forloop.counter }}</p>
+        
+    {% elif sessions %}
         {% for session in sessions %}
     <div style="float: left; width: 100%; padding: 20px;">
         <div style="float: left;margin:5px;width: 45%;">

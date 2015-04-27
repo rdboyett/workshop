@@ -71,7 +71,7 @@
                     <td>
                       <form action="{% url "workshop_project.views.classView" %}" enctype='multipart/form-data' method="post" autocomplete="off">{% csrf_token %}
                         <input type="hidden" name="date" value="{{session.classDate|html5Date}}">
-                        <input type="hidden" name="startTime" value="{{session.startTime}}">
+                        <input type="hidden" name="startTime" value="{{session.startTime|time:"H:i:s"}}">
                         <button type="submit" class="btn btn-danger">find a session</button>
                       </form>
                       
@@ -82,7 +82,7 @@
               </table>
             {% else %}
               {% if mySessions %}
-                <h4 class="text-success">Congradulations!  You have completed your schedule!</h4>
+                <h4 class="text-success">Congratulations!  You have completed your schedule!</h4>
               {% endif %}
             {% endif %}
             </div>
