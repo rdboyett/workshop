@@ -160,11 +160,12 @@ def studentView(request, studentID=False):
 @login_required
 def conferenceView(request):
     userInfo = ClassUser.objects.get(user=request.user)
-    '''
+    
     #I'me creating a table by room(heading) and startTime(on left side)
     
     #need to first get all possible locations by date
-    availableLocations = []
+    
+    sessionTables = []
     
     #first get all possible dates for sessions
     if Classroom.objects.filter(active=True, classDate__gte=datetime.date.today()):
@@ -174,63 +175,62 @@ def conferenceView(request):
             if session.classDate not in possibleDates:
                 possibleDates.append(session.classDate)
         
-        #Next get possible locations
         
         if possibleDates:
             for date in possibleDates:
-                startTimes_to_exclude = [x.startTime for x in mySessions.filter(classDate=date)]
-                if Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude):
-                    allClasses = Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude).order_by('name')
-                    availableClassTimes.extend(allClasses)
+                #get all possible classes
+                allClasses = Classroom.objects.filter(classDate=date).order_by('location')
+                
+                #get all possible locations
+                availableLocations = []
+                for currentClass in allClasses:
+                    if currentClass.location not in availableLocations:
+                        availableLocations.append(currentClass.location)
+                        
+                #get all possible time slots for sessions
+                possibleStartTimes = []
+                for currentClass in allClasses:
+                    if currentClass.startTime not in possibleStartTimes:
+                        possibleStartTimes.append(currentClass.startTime)
+                        
+                #Now lets build sessions object row by row and column by column
+                #loop through the classes and check that they correspond with the correct location and startTime if not place an empty object
+                #sessionsTableObject = {'date':date, 'columns':['column1', 'column2'...], 'rows':['row1','row2'...], 'TwoD_Sessions':[[classObject, classObject, 'empty'], [classObject, classObject, 'empty']]}
+                # sessions above is a 2D array
+                
+                sessionsTableObject = {}
+                sessionsTableObject['date'] = date  #this starts a new table
+                sessionsTableObject['columns'] = availableLocations  #these are the room locations
+                sessionsTableObject['rows'] = possibleStartTimes  #these are the startTimes
+                
+                #Next create the list of classes checked against the column and row if necessary add False for blank spots
+                TwoD_Sessions = []
+                for startTime in possibleStartTimes:
+                    currentRow = []
+                    currentRow.append({'rowStarter':startTime})
+                    for location in availableLocations:
+                        if allClasses.filter(startTime=startTime, location=location):
+                            currentRow.append(allClasses.get(startTime=startTime, location=location))
+                        else:
+                            currentRow.append({'empty':'Empty'})
+                            
+                    TwoD_Sessions.append(currentRow)  #add the row to the 2D array
                     
-            tempDateTime = []
-            for currentClass in availableClassTimes:
-                currentClassDateTime = datetime.datetime.combine(currentClass.classDate, currentClass.startTime)
-                if currentClassDateTime not in tempDateTime:
-                    tempDateTime.append(currentClassDateTime)
-                    availableTimeSlots.append(currentClass)
+                #finally add to table object
+                sessionsTableObject['TwoD_Sessions'] = TwoD_Sessions
+                
+                #Then append that to the sessionTables
+                sessionTables.append(sessionsTableObject)
         
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        #Check each date against all available classes
-        if possibleDates:
-            for date in possibleDates:
-                startTimes_to_exclude = [x.startTime for x in mySessions.filter(classDate=date)]
-                if Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude):
-                    allClasses = Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude).order_by('name')
-                    availableClassTimes.extend(allClasses)
-                    
-            tempDateTime = []
-            for currentClass in availableClassTimes:
-                currentClassDateTime = datetime.datetime.combine(currentClass.classDate, currentClass.startTime)
-                if currentClassDateTime not in tempDateTime:
-                    tempDateTime.append(currentClassDateTime)
-                    availableTimeSlots.append(currentClass)
-        
-    '''
+    log.info(sessionTables)
     
-    testDict = [{'date':'2015-04-24', 'rooms':['room 1', 'room2', 'room 3']},{'date':'2015-04-25', 'rooms':['room 4', 'room 5', 'room 6']},]
-    
-    
-    if Classroom.objects.filter(active=True, classDate__gte=datetime.date.today()):
-        sessions = Classroom.objects.filter(active=True, classDate__gte=datetime.date.today())
-    else:
-        sessions = False
-        
-        
     args = {
             'user':request.user,
             'userInfo':userInfo,
-            'sessions':sessions,
-            'testDict':testDict,
+            'sessionTables':sessionTables,
         }
     args.update(csrf(request))
     
