@@ -39,13 +39,17 @@
                       <tr>
                     {% for session in row %}
                         {% if session.rowStarter %}
-                          <td class="info">{{ session.rowStarter }}</td>
+                          <td class="info startTime">{{ session.rowStarter }}</td>
                         {% elif session.empty %}
-                          <td class="danger">{{ session.empty }}</td>
+                          <td class="danger emptyClick" style="cursor: pointer;" data-options='{"date":"{{table.date|html5Date}}"}'>
+                            {{ session.empty }}
+                          </td>
                         {% else %}
                           <td{%if session.classFull%} class="warning"{%endif%}>
-                            <div>{{ session.name }}</div>
-                            <div>No. Students: {{session.classSize}}</div>
+                            <a href="{% url "workshop_project.views.classView" session.id %}">
+                              <div>{{ session.name }}</div>
+                              <div>No. Students: {{session.classSize}}</div>
+                            </a>
                           </td>
                         {% endif %}
                     {% endfor %}

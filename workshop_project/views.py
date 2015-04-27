@@ -231,6 +231,7 @@ def conferenceView(request):
             'user':request.user,
             'userInfo':userInfo,
             'sessionTables':sessionTables,
+            'conferenceView':conferenceView,
         }
     args.update(csrf(request))
     
