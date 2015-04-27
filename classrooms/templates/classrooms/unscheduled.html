@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Unscheduled Students</title>
+</head>
+
+<body>
+
+    {% if studentAttentionList %}
+    <div style="float: left; width: 100%; padding: 20px;">
+        <div style="float: left;margin:5px;width: 45%;">
+            <h3>The following students are not registered for one or more sessions.</h3>
+        </div>
+        <div style="float: right;width: 45%;">
+            <div><h3>date:  {% now "SHORT_DATE_FORMAT" %}</h3></div>
+        </div>
+    </div>
+    <div style="float: left; width: 100%;padding: 20px 20px 20px 40px;border-top: 1px solid #000;border-bottom: 1px solid #000">
+        <div>Students:</div><br>
+           {% for userInfo in studentAttentionList %}
+        <div>{{forloop.counter}}.  {{ userInfo.user.first_name|capfirst }} {{ userInfo.user.last_name|capfirst }}</div>
+           {% endfor %}
+    </div>
+    {% else %}
+        All students are currently registered for all classes.<br>
+    {% endif %}
+
+
+
+
+</body>
+</html>

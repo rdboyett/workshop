@@ -25,6 +25,10 @@
       {% if sessionTables %}
         {% for table in sessionTables %}
           <h3>{{table.date}}</h3>
+          <div class="pull-right"  style="margin-top: -40px;">
+            <button class="btn btn-danger">lock all sessions for this date</button>
+            <a href="{% url "classrooms.ajax.unscheduled" %}" target="unscheduled" class="btn btn-danger">Check for Unscheduled students</a>
+          </div>
               <table class="table table-striped">
                 <thead>
                   <tr>

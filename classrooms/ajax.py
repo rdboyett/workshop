@@ -664,12 +664,40 @@ def mySchedulePrint(request, userID=False):
 
 
 
-
-
-
-
-
-
+@login_required
+def unscheduled(request):
+    studentAttentionList = []
+    if ClassUser.objects.filter(teacher=False, classrooms__classDate__gte=datetime.date.today()):
+        allStudents = ClassUser.objects.filter(teacher=False, classrooms__classDate__gte=datetime.date.today())
+        for student in allStudents:
+            if Classroom.objects.filter(classuser__id=student.id, classDate__gte=datetime.date.today()):
+                myStudentSessions = Classroom.objects.filter(classuser__id=student.id, classDate__gte=datetime.date.today())
+                
+                #first get all the possible dates that they are regestered for
+                possibleDates = []
+                for session in myStudentSessions:
+                    if session.classDate not in possibleDates:
+                        possibleDates.append(session.classDate)
+                        
+                if possibleDates:
+                    for date in possibleDates:
+                        startTimes_to_exclude = [x.startTime for x in myStudentSessions.filter(classDate=date)]
+                        if Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude):
+                            #then there are classes on that date that have startTimes that are different from registerd start times
+                            if student not in studentAttentionList:
+                                studentAttentionList.append(student)
+                    
+        
+        
+    else:
+        allStudents = False
+        
+    args = {
+            'user':request.user,
+            'studentAttentionList':studentAttentionList,
+        }
+    
+    return render_to_response("classrooms/unscheduled.html", args)
 
 
 
