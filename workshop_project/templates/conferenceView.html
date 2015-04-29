@@ -31,7 +31,7 @@
             <form id="forceAndToggleLock-form" action="{% url "classrooms.ajax.forceAndToggleLock" %}" enctype='multipart/form-data' method="post" autocomplete="off">{% csrf_token %}
               <input type="hidden" name="date" value="{{table.date|html5Date}}">
               <input type="hidden" name="lock_or_unlock" value="{% if not table.lockedStatus %}lock{%else%}unlock{%endif%}">
-              <button type="submit" class="btn {% if not table.lockedStatus %}btn-danger">Force Schedule and Lock All Sessions for this Date{%else%}btn-success">Unlock All Sessions for this Date{%endif%}</button>
+              <button type="submit" class="toggleLockBtn btn {% if not table.lockedStatus %}btn-danger"><span>Force Schedule and Lock All Sessions for this Date</span>{%else%}btn-success"><span>Unlock All Sessions for this Date</span>{%endif%}</button>
             </form>
             
           </div>
