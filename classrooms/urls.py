@@ -22,5 +22,5 @@ urlpatterns += patterns('classrooms.ajax',
     (r'^mySchedulePrint/(?P<userID>\d+)/$', 'mySchedulePrint'),
     (r'^mySchedulePrint/$', 'mySchedulePrint'),
     (r'^unscheduled/$', 'unscheduled'),
-    
+    (r'^forceAndToggleLock/$', 'forceAndToggleLock'),
 )

@@ -210,6 +210,18 @@ $(document).ready(function(){
     
     
     
+    $("#forceAndToggleLock-form").ajaxForm({ 
+            success:       function(responseText){
+                console.log(responseText);
+                if (responseText.error) {
+                    alert(responseText.error);
+                }else{
+                    window.location.href = "/conferenceView/";
+                }
+            },
+            dataType:  'json',
+            timeout:   10000 
+        });
     
     
     

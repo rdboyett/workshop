@@ -183,7 +183,10 @@ def conferenceView(request):
                 
                 #get all possible locations
                 availableLocations = []
+                bSessionsLocked = False
                 for currentClass in allClasses:
+                    if not currentClass.allowJoin:
+                        bSessionsLocked = True
                     if currentClass.location not in availableLocations:
                         availableLocations.append(currentClass.location)
                         
@@ -200,6 +203,7 @@ def conferenceView(request):
                 
                 sessionsTableObject = {}
                 sessionsTableObject['date'] = date  #this starts a new table
+                sessionsTableObject['lockedStatus'] = bSessionsLocked  #In order to keep track if all sessions are locked or unlocked
                 sessionsTableObject['columns'] = availableLocations  #these are the room locations
                 sessionsTableObject['rows'] = possibleStartTimes  #these are the startTimes
                 
