@@ -16,10 +16,8 @@
         {% if userInfo.teacher %}
         <a href="{% url "workshop_project.views.studentView" %}" class="btn btn-danger">explore students</a>
         <button id="textLoadbtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>  Print All Session Rosters</button>
+        <a href="{% url "classrooms.ajax.unscheduled" %}" target="unscheduled" class="btn btn-danger pull-right" style="">Check for Unscheduled students</a>
         {% endif %}
-          {% if user.email|isAdminUser %}
-            <a href="{% url "classrooms.ajax.unscheduled" %}" target="unscheduled" class="btn btn-danger pull-right" style="">Check for Unscheduled students</a>
-          {% endif %}
       </div>
       
       
@@ -30,7 +28,7 @@
           <h3>{{table.date}}</h3>
           {% if user.email|isAdminUser %}
           <div class="pull-right"  style="margin-top: -40px;">
-            <button class="btn btn-danger">lock all sessions for this date</button>
+            <button class="btn btn-danger">Force Schedule and Lock All Sessions for this Date</button>
           </div>
           {% endif %}
               <table class="table table-striped">
