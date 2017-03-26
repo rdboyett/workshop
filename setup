@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+RESET='\033[0m'
+RED='\033[1;31m'
+CYAN='\033[1;36m'
+
+# setup test environment
+echo "Setting up virtual environment..."
+virtualenv --quiet venv/workshop
+
+source venv/workshop/bin/activate
+echo "Installing python packages..."
+pip install --quiet -r requirements.txt
+ln -sf venv/workshop/bin/activate activate-workshop
+chmod 755 activate-workshop
+
+echo -e "${CYAN}Run command \`${RESET}source activate-workshop${CYAN}\` to activate the virtualenv,${RESET}"
+echo -e "${CYAN}run \`${RESET}python manage.py migrate${CYAN}\` to create your database.${RESET}"
+echo -e "${CYAN}run \`${RESET}python manage.py createsuperuser${CYAN}\` to create your super user.${RESET}"
+echo -e "${CYAN}run \`${RESET}python manage.py runserver${CYAN}\` to start your application.${RESET}"

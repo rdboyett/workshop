@@ -23,4 +23,4 @@
 
         python manage.py runserver
 
-1. Open your browser and go to [http://127.0.0.1:8000](http://127.0.0.1:800) for Django.
+1. Open your browser and go to [http://127.0.0.1:8000](http://127.0.0.1:8000) for Django.
