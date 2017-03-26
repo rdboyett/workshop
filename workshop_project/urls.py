@@ -19,12 +19,11 @@ urlpatterns = patterns('',
 
 #local views file
 urlpatterns += patterns('workshop_project.views',
-    (r'^$', 'index'),
-    (r'^dashboard/$', 'dashboard'),
-    (r'^classView/(?P<classID>\d+)/$', 'classView'),
-    (r'^studentView/(?P<studentID>\d+)/$', 'studentView'),
-    (r'^classView/$', 'classView'),
-    (r'^studentView/$', 'studentView'),
-    (r'^conferenceView/$', 'conferenceView'),
-    
+                        url(r'^$', 'index'),
+                        url(r'^dashboard/$', 'dashboard', name="dashboard"),
+                        url(r'^classView/(?P<classID>\d+)/$', 'classView', name='classView'),
+                        url(r'^studentView/(?P<studentID>\d+)/$', 'studentView', name='studentView'),
+                        url(r'^classView/$', 'classView', name='classView'),
+                        url(r'^studentView/$', 'studentView', name='studentView'),
+                        url(r'^conferenceView/$', 'conferenceView', name='conferenceView'),
 )

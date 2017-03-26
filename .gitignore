@@ -55,6 +55,7 @@ node_modules/
 # virtual environments
 .env
 venv/
+environ.py
 
 # User-uploaded media
 urlshortener_project/media/

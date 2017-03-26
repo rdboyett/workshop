@@ -12,7 +12,7 @@ SCOPES = [
 ]
 
 #Change the redirect uri for your project
-redirect_uri='http://workshop.alvaradoisd.net/google/oauth2callback'
+redirect_uri='http://127.0.0.1:8000/google/oauth2callback'
 
 #Login Success redirect
 LOGIN_SUCCESS = '/dashboard/'
@@ -31,7 +31,7 @@ ROOT_WEBSITE_LINK = 'http://workshop.alvaradoisd.net'
 # Use an email address ending to block allow only users
 BLOCK_ALL_USERS = False
 
-ALLOW_ONLY_USERS = 'alvaradoisd.net'
+ALLOW_ONLY_USERS = False
 BLOCK_STUDENTS = False
 
 MESSAGE_TO_BLOCKED_USERS = "Your trying to sign in with an email that is not allowed.  Please try again with your Alvarado ISD account."

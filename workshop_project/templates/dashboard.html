@@ -18,11 +18,11 @@
         {% endif %}
         <button id="mySchedulePrintBtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>  Print My Schedule</button>
       </div>
-      
+
       <div class="panel">
             <div class="panel-body">
             {% if mySessions %}
-              <table class="table table-striped" data-toggle="table" data-search="true" 
+              <table class="table table-striped" data-toggle="table" data-search="true"
         data-pagination="true">
                 <thead>
                   <tr>
@@ -44,7 +44,7 @@
                     <td>{{ session.location }}</td>
                     <td>
                       <div class="btn {% if session.classDate < today %}btn-info{%else%}btn-danger{% endif %} addSessionBtn" data-options='{"sessionID":"{{session.id}}"}'>{% if session.classDate < today %}ARCHIVE{%else%}remove{% endif %}</div>
-                      
+
                       <a href="{% url workshop_project.views.classView session.id %}" class="btn btn-warning">view</a>
                     </td>
                   </tr>
@@ -55,10 +55,10 @@
               Sorry, you have now sessions scheduled.
               <a href="{% url workshop_project.views.classView %}" class="btn btn-warning">find a session</a>
             {% endif %}
-            
-            
-            
-            
+
+
+
+
             {% if availableTimeSlots %}
               <table class="table table-striped">
                 <tbody>

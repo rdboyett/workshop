@@ -28,6 +28,7 @@ from oauth2client.django_orm import Storage
 from oauth2client.client import OAuth2WebServerFlow
 
 from apiclient import errors
+from .settings import ALLOW_ONLY_USERS
 
 
 # CLIENT_SECRETS, name of a file containing the OAuth 2.0 information for this
@@ -96,15 +97,9 @@ def auth_return(request):
     emailEnding = google_email.split("@")[1]
     userName = "@"+google_email.split("@")[0]
     
-    
-    if 'alvaradoisd.net' in emailEnding:
-        if 'student' in emailEnding:
-            bTeacher = False
-        else:
-            bTeacher = True
-            
-	
-    
+    bTeacher = True
+    if 'alvaradoisd.net' in emailEnding and 'student' in emailEnding:
+        bTeacher = False
     
     if User.objects.filter(username=userName):
         # Make sure that the e-mail is unique.
@@ -112,16 +107,16 @@ def auth_return(request):
     elif User.objects.filter(email=google_email):
         user = User.objects.get(email=google_email)
     else:
-        if 'alvaradoisd.net' in emailEnding:
-	    user = User.objects.create(
-		    username = userName,
-		    first_name = firstName,
-		    last_name = lastName,
-		    email = google_email,
-		    password = userName+google_id[:5],
-		)
-	else:
-	    return HttpResponse('Please sign in with a Alvarado ISD account.')
+        if 'alvaradoisd.net' in emailEnding or not ALLOW_ONLY_USERS:
+            user = User.objects.create(
+                username = userName,
+                first_name = firstName,
+                last_name = lastName,
+                email = google_email,
+                password = userName+google_id[:5],
+            )
+        else:
+            return HttpResponse('Please sign in with a Alvarado ISD account.')
     
     if not ClassUser.objects.filter(user=user):
         userInfo = ClassUser.objects.create(

@@ -1,0 +1,4 @@
+Django==1.4.10
+google-api-python-client==1.2
+httplib2==0.9.1
+wsgiref==0.1.2
