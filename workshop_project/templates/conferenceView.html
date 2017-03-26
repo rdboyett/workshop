@@ -12,12 +12,14 @@
         {% if user.email|isAdminUser %}
         <div class="btn btn-success" data-toggle="modal" data-target="#createSession">create a new session</div>
         {% endif %}
-        <a href="{% url "workshop_project.views.classView" %}" class="btn btn-info">view all sessions</a>
+        <a href="{% url workshop_project.views.classView %}" class="btn btn-info">view all sessions</a>
         {% if userInfo.teacher %}
-        <a href="{% url "workshop_project.views.studentView" %}" class="btn btn-danger">explore students</a>
+        <a href="{% url workshop_project.views.studentView %}" class="btn btn-danger">explore students</a>
         <button id="textLoadbtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>  Print All Session Rosters</button>
-        <a href="{% url "classrooms.ajax.unscheduled" %}" target="unscheduled" class="btn btn-danger pull-right" style="">Check for Unscheduled students</a>
         {% endif %}
+          {% if user.email|isAdminUser %}
+            <a href="{% url classrooms.ajax.unscheduled %}" target="unscheduled" class="btn btn-danger pull-right" style="">Check for Unscheduled students</a>
+          {% endif %}
       </div>
       
       
@@ -28,12 +30,12 @@
           <h3>{{table.date}}</h3>
           {% if user.email|isAdminUser %}
           <div class="pull-right"  style="margin-top: -40px;">
-            <form id="forceAndToggleLock-form" action="{% url "classrooms.ajax.forceAndToggleLock" %}" enctype='multipart/form-data' method="post" autocomplete="off">{% csrf_token %}
+            <form id="forceAndToggleLock-form" action="{% url classrooms.ajax.forceAndToggleLock %}" enctype='multipart/form-data' method="post" autocomplete="off">{% csrf_token %}
+
               <input type="hidden" name="date" value="{{table.date|html5Date}}">
               <input type="hidden" name="lock_or_unlock" value="{% if not table.lockedStatus %}lock{%else%}unlock{%endif%}">
               <button type="submit" class="toggleLockBtn btn {% if not table.lockedStatus %}btn-danger"><span>Force Schedule and Lock All Sessions for this Date</span>{%else%}btn-success"><span>Unlock All Sessions for this Date</span>{%endif%}</button>
             </form>
-            
           </div>
           {% endif %}
               <table class="table table-striped">
@@ -54,13 +56,13 @@
                         {% elif session.empty %}
                           <td class="danger emptyClick" style="cursor: pointer;" data-options='{"date":"{{table.date|html5Date}}"}'>
                             {{ session.empty }}
-                          </td>
+			  </td>
                         {% else %}
                           <td{%if session.classFull%} class="warning"{%endif%}>
-                            <a href="{% url "workshop_project.views.classView" session.id %}">
-                              <div>{{ session.name }}</div>
-                              <div>No. Students: {{session.classSize}}</div>
-                            </a>
+				<a href="{% url workshop_project.views.classView session.id %}">
+                            <div>{{ session.name }}</div>
+                            <div>No. Students: {{session.classSize}}</div>
+				</a>
                           </td>
                         {% endif %}
                     {% endfor %}
@@ -82,6 +84,3 @@
 </div> <!-- End of Main-Content -->
 
 {% endblock %}
-
-
-

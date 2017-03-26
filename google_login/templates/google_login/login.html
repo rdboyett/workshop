@@ -111,7 +111,7 @@ function getCookie(name) {
 	function checkUser(username, password) {
 		//console.log('In tweetSubmit');
             var csrftoken = getCookie('csrftoken');
-            var uri = "{% url 'google_login.views.ajaxAuth' %}";
+            var uri = "{% url google_login.views.ajaxAuth %}";
             var xhr = new XMLHttpRequest();
             var fd = new FormData();
             
@@ -127,7 +127,7 @@ function getCookie(name) {
                         $("#google-login-error").fadeIn(600);
                     }
 		            else{
-                        window.location.href="{% url 'google_login.views.success' %}"
+                        window.location.href="{% url google_login.views.success %}"
                     }
                 }
             };
@@ -146,7 +146,7 @@ function getCookie(name) {
 	function doesUsernameExist(username) {
 		//console.log('In tweetSubmit');
             var csrftoken = getCookie('csrftoken');
-            var uri = "{% url 'google_login.views.checkUsername' %}";
+            var uri = "{% url google_login.views.checkUsername %}";
             var xhr = new XMLHttpRequest();
             var fd = new FormData();
             
@@ -188,7 +188,7 @@ function getCookie(name) {
 	function doesEmailExist(email) {
 		//console.log('In doesEmailExist');
             var csrftoken = getCookie('csrftoken');
-            var uri = "{% url 'google_login.views.doesEmailExist' %}";
+            var uri = "{% url google_login.views.doesEmailExist %}";
             var xhr = new XMLHttpRequest();
             var fd = new FormData();
             
@@ -232,7 +232,7 @@ function getCookie(name) {
 	function submitRegistration() {
 		//console.log('In submitRegistration');
             var csrftoken = getCookie('csrftoken');
-            var uri = "{% url 'google_login.views.submitRegistration' %}";
+            var uri = "{% url google_login.views.submitRegistration %}";
             var xhr = new XMLHttpRequest();
             var fd = new FormData();
             
@@ -247,7 +247,7 @@ function getCookie(name) {
                         alert(data.error);
                     }
 		            else{
-                        window.location.href="{% url 'google_login.views.success' %}"
+                        window.location.href="{% url google_login.views.success %}"
                     }
                 }
             };
@@ -269,7 +269,7 @@ submitPasswordForgot
 	function submitPasswordForgot(email) {
 		//console.log('In submitPasswordForgot');
             var csrftoken = getCookie('csrftoken');
-            var uri = "{% url 'google_login.views.submitPasswordForgot' %}";
+            var uri = "{% url google_login.views.submitPasswordForgot %}";
             var xhr = new XMLHttpRequest();
             var fd = new FormData();
             

@@ -84,7 +84,6 @@ staticfiles/
 *.rar
 *.tar
 *.zip
-
 # Logs and databases #
 ######################
 *.log
@@ -93,7 +92,6 @@ staticfiles/
 *.sqlite3
 logfile
 logfile.*
-
 # OS generated files #
 ######################
 .DS_Store

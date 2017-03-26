@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load my_tags %}
-{% load adminUser_tags %}
 
     {% block title %}Indian Workshop | dashboard{% endblock %}
 
@@ -10,7 +9,7 @@
         {% if userInfo.teacher %}
         
         <h1>{% if currentUser %}{{currentUser.user.first_name|capfirst }} {{currentUser.user.last_name|capfirst|possession }} Schedule{% else %}All Students{% endif %}</h1>
-        {% if user.email|isAdminUser %}
+        {% if user.email == 'jholland@alvaradoisd.net' or user.email == 'jhenderson@alvaradoisd.net' or user.email == 'rboyett@alvaradoisd.net' %}
         <div class="btn btn-success" data-toggle="modal" data-target="#createSession">create a new session</div>
         {% endif %}
         <a href="{% url workshop_project.views.classView %}" class="btn btn-warning">explore sessions</a>
@@ -73,7 +72,7 @@
                 </tbody>
               </table>
       {% else %}
-        Sorry, there are currently no students in the system.
+        Sorry, there are currently no sessions created.
       {% endif %}
             </div>
       </div>

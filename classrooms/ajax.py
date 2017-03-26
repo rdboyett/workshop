@@ -5,6 +5,7 @@ import datetime
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse
 from django.core.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -403,6 +404,7 @@ def getNewMessages(request):
 
 
 @login_required
+@csrf_exempt
 def addSession(request):
     if request.method == 'POST':
         sessionID = request.POST["sessionID"].strip()
@@ -437,8 +439,8 @@ def addSession(request):
                     data = {'groupID': newClass.id,}
                 else:
                     data = {'error':'Sorry, this session has been locked.'}
-                
-                
+
+
             else:
                 #check to see if you are allowed to join
                 if newClass.allowJoin:
@@ -534,7 +536,6 @@ def addSession(request):
         }
             
     return HttpResponse(json.dumps(data))
-
 
 
 @login_required
@@ -667,6 +668,51 @@ def mySchedulePrint(request, userID=False):
 
 
 
+@login_required
+def unscheduled(request):
+    studentAttentionList = []
+    sessionDetailList = []
+    if ClassUser.objects.filter(teacher=False, classrooms__classDate__gte=datetime.date.today()):
+        allStudents = ClassUser.objects.filter(teacher=False, classrooms__classDate__gte=datetime.date.today()).order_by('user__last_name')
+        for student in allStudents:
+            if Classroom.objects.filter(classuser__id=student.id, classDate__gte=datetime.date.today()):
+                myStudentSessions = Classroom.objects.filter(classuser__id=student.id, classDate__gte=datetime.date.today())
+                
+                #first get all the possible dates that they are regestered for
+                possibleDates = []
+                for session in myStudentSessions:
+                    if session.classDate not in possibleDates:
+                        possibleDates.append(session.classDate)
+                        
+                if possibleDates:
+                    for date in possibleDates:
+                        startTimes_to_exclude = [x.startTime for x in myStudentSessions.filter(classDate=date)]
+                        if Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude):
+                            #then there are classes on that date that have startTimes that are different from registerd start times
+			    possibleMissingStartTimes = []
+			    for possibleSession in Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude):
+			    	if possibleSession.startTime not in possibleMissingStartTimes:
+				    possibleMissingStartTimes.append(possibleSession.startTime)
+                            if student not in studentAttentionList:
+                                studentAttentionList.append(student)
+				sessionDetailObject = {'student':student, 'missingSessions':possibleMissingStartTimes}
+				sessionDetailList.append(sessionDetailObject)
+                    
+        
+        
+    else:
+        allStudents = False
+        
+    args = {
+            'user':request.user,
+            'studentAttentionList':studentAttentionList,
+            'sessionDetailList':sessionDetailList,
+        }
+    
+    return render_to_response("classrooms/unscheduled.html", args)
+
+
+
 
 @login_required
 def unscheduled(request):
@@ -773,6 +819,69 @@ def forceAndToggleLock(request):
     return HttpResponse(json.dumps(data))
 
 
+@login_required
+def forceAndToggleLock(request):
+    if request.method == 'POST':
+        date = request.POST['date'].strip()
+        lock_or_unlock = request.POST['lock_or_unlock'].strip()
+        
+        #if lock == lock then we will attempt to force all unregistered students
+        if lock_or_unlock == 'lock':
+            log.info('inside lock')
+            #get all students with sessions on this date
+            if ClassUser.objects.filter(teacher=False, classrooms__classDate=date):
+                allStudents = ClassUser.objects.filter(teacher=False, classrooms__classDate=date)
+                for student in allStudents:
+                    if Classroom.objects.filter(classuser__id=student.id, classDate=date):
+                        myStudentSessions = Classroom.objects.filter(classuser__id=student.id, classDate=date)
+                        
+                        startTimes_to_exclude = [x.startTime for x in myStudentSessions]
+                        if Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude):
+                            possibleSessions = Classroom.objects.filter(classDate=date).exclude(startTime__in=startTimes_to_exclude)
+                            #then there are classes on that date that have startTimes that are different from registerd start times
+                            #loop through possible sessions and join first possible class that isn't full.
+                            sessionStartTimeTracker = []
+                            for session in possibleSessions:
+                                #keep track of session startTimes in order to add only one class per possible startTime
+                                if session.startTime not in sessionStartTimeTracker:
+                                    if session.allowJoin and not session.classFull:
+                                        student.classrooms.add(session)
+                                        #Now add to class size and check if full
+                                        if session.classSize < 0:
+                                            session.classSize = 0
+                                        
+                                        session.classSize +=1
+                                        if session.classSize >= session.classLimit:  #then class is full
+                                            session.classFull = True
+                                            
+                                        session.save()
+                                        #Now add to tracker to prevent sessions with same startTime from being added
+                                        sessionStartTimeTracker.append(session.startTime)
+
+            
+            #if lock then lock all sessions
+            if Classroom.objects.filter(classDate=date):
+                allSessions = Classroom.objects.filter(classDate=date)
+                for session in allSessions:
+                    if session.allowJoin:
+                        session.allowJoin = False
+                        session.save()
+            
+                        
+        else:  #unlock sessions for this date
+            if Classroom.objects.filter(classDate=date):
+                allSessions = Classroom.objects.filter(classDate=date)
+                for session in allSessions:
+                    if not session.allowJoin:
+                        session.allowJoin = True
+                        session.save()
+                                    
+        data = {'success':'success'}
+        
+    else:
+        data = {'error':"didn't post"}
+                
+    return HttpResponse(json.dumps(data))
 
 
 

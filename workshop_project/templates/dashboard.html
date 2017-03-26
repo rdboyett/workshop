@@ -12,17 +12,17 @@
         {% if user.email|isAdminUser %}
         <div class="btn btn-success" data-toggle="modal" data-target="#createSession">create a new session</div>
         {% endif %}
-        <a href="{% url "workshop_project.views.classView" %}" class="btn btn-warning">explore sessions</a>
+        <a href="{% url workshop_project.views.classView %}" class="btn btn-warning">explore sessions</a>
         {% if userInfo.teacher %}
-        <a href="{% url "workshop_project.views.studentView" %}" class="btn btn-danger">explore students</a>
+        <a href="{% url workshop_project.views.studentView %}" class="btn btn-danger">explore students</a>
         {% endif %}
         <button id="mySchedulePrintBtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>  Print My Schedule</button>
       </div>
-      
+
       <div class="panel">
             <div class="panel-body">
             {% if mySessions %}
-              <table class="table table-striped" data-toggle="table" data-search="true" 
+              <table class="table table-striped" data-toggle="table" data-search="true"
         data-pagination="true">
                 <thead>
                   <tr>
@@ -44,8 +44,8 @@
                     <td>{{ session.location }}</td>
                     <td>
                       <div class="btn {% if session.classDate < today %}btn-info{%else%}btn-danger{% endif %} addSessionBtn" data-options='{"sessionID":"{{session.id}}"}'>{% if session.classDate < today %}ARCHIVE{%else%}remove{% endif %}</div>
-                      
-                      <a href="{% url "workshop_project.views.classView" session.id %}" class="btn btn-warning">view</a>
+
+                      <a href="{% url workshop_project.views.classView session.id %}" class="btn btn-warning">view</a>
                     </td>
                   </tr>
                   {% endfor %}
@@ -53,7 +53,37 @@
               </table>
             {% else %}
               Sorry, you have now sessions scheduled.
-              <a href="{% url "workshop_project.views.classView" %}" class="btn btn-warning">find a session</a>
+              <a href="{% url workshop_project.views.classView %}" class="btn btn-warning">find a session</a>
+            {% endif %}
+
+
+
+
+            {% if availableTimeSlots %}
+              <table class="table table-striped">
+                <tbody>
+                  <thead>
+                    <span class="text-warning">Looks like you need more sessions...</span>
+                  </thead>
+                  {% for session in availableTimeSlots %}
+                  <tr>
+                    <td>You need to add a session for <span class="text-danger">{{ session.classDate|date }}</span> from <span class="text-danger">{{session.startTime|time}} to {{session.endTime|time}}</span></td>
+                    <td>
+                      <form action="{% url workshop_project.views.classView %}" enctype='multipart/form-data' method="post" autocomplete="off">{% csrf_token %}
+                        <input type="hidden" name="date" value="{{session.classDate|html5Date}}">
+                        <input type="hidden" name="startTime" value="{{session.startTime|time:"H:i:s"}}">
+                        <button type="submit" class="btn btn-danger">find a session</button>
+                      </form>
+                      
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% else %}
+              {% if mySessions %}
+                <h4 class="text-success">Congratulations!  You have completed your schedule!</h4>
+              {% endif %}
             {% endif %}
             
             

@@ -172,6 +172,15 @@ $(document).ready(function(){
 	w.print();
     });
     
+    $("#oneSessionLoadbtn").click(function(){
+	var sessionID = $(this).data("options").sessionID;
+	w = window.open('/class/allSessionsPrint/'+sessionID);
+	w.print();
+    });
+    
+    
+    
+    
     $(".emptyClick").click(function(){
 	var date = $(this).data("options").date;
 	var startTime = $(this).parent().find('.startTime').html();
@@ -210,7 +219,7 @@ $(document).ready(function(){
     
     
     
-    $("#forceAndToggleLock-form").ajaxForm({
+    $("#forceAndToggleLock-form").ajaxForm({ 
 	    beforeSubmit: function(){
 		$(".toggleLockBtn span").fadeOut(600, function(){
 		    $(".toggleLockBtn span").html('working...').fadeIn(600);
@@ -222,15 +231,12 @@ $(document).ready(function(){
                 if (responseText.error) {
                     alert(responseText.error);
                 }else{
-                    //window.location.href = "/conferenceView/";
+                    window.location.href = "/conferenceView/";
                 }
             },
             dataType:  'json',
             timeout:   10000 
         });
-    
-    
-    
     
     
     

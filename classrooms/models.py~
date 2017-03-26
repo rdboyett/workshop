@@ -13,6 +13,10 @@ class Message(models.Model):
     def __unicode__(self):
       return u'%s' % (self.text)
     
+    
+    class Meta:
+        ordering = ['-timeDate']
+    
 
 class HashTag(models.Model):
     tag = models.CharField(max_length=45)
@@ -29,19 +33,39 @@ class Classroom(models.Model):
     name = models.CharField(max_length=45)
     code = models.CharField(max_length=10)
     messages = models.ManyToManyField(Message, blank=True, null=True)
-    allowJoin = models.BooleanField()
+    allowJoin = models.BooleanField(default=True)
     classOwnerID = models.IntegerField()
+    allUserClass = models.BooleanField(default=False)
+    description = models.CharField(max_length=210, blank=True, null=True)
+    classDate = models.DateField(auto_now=False, blank=True, null=True)
+    startTime = models.TimeField(blank=True, null=True)
+    endTime = models.TimeField(blank=True, null=True)
+    location = models.CharField(max_length=45, blank=True, null=True)
+    active = models.BooleanField(default=True)
+    classLimit = models.IntegerField(default=30)
+    classSize = models.IntegerField(default=0)
+    classFull = models.BooleanField(default=False)
+    
+    
 
 
     def __unicode__(self):
-      return u'%s' % (self.name)
+      return u'%s on: %s from: %s to %s in %s' % (self.name, self.classDate, self.startTime, self.endTime, self.location)
+    
+    
+    class Meta:
+        ordering = ['classDate', 'startTime']
+        verbose_name = 'Session'
+        verbose_name_plural = 'Sessions'
 
 class ClassUser(models.Model):
     user = models.ForeignKey(User)
-    teacher = models.BooleanField()
-    readOnly = models.BooleanField(deafault=False)
+    teacher = models.BooleanField(default=False)
+    readOnly = models.BooleanField(default=False)
     messages = models.ManyToManyField(Message, blank=True, null=True)
     classrooms = models.ManyToManyField(Classroom, blank=True, null=True)
+    avatarBackColor = models.CharField(max_length=45, blank=True, null=True)
+    avatarTextColor = models.CharField(max_length=45, blank=True, null=True)
 
 
     def __unicode__(self):
@@ -49,8 +73,9 @@ class ClassUser(models.Model):
     
     
     
-    
-    
+
+admin.site.register(Classroom)
+admin.site.register(ClassUser)
     
     
     

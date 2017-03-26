@@ -7,7 +7,7 @@
 
 <body>
 
-    {% if studentAttentionList %}
+    {% if sessionDetailList %}
     <div style="float: left; width: 100%; padding: 20px;">
         <div style="float: left;margin:5px;width: 45%;">
             <h3>The following students are not registered for one or more sessions.</h3>
@@ -18,8 +18,12 @@
     </div>
     <div style="float: left; width: 100%;padding: 20px 20px 20px 40px;border-top: 1px solid #000;border-bottom: 1px solid #000">
         <div>Students:</div><br>
-           {% for userInfo in studentAttentionList %}
-        <div>{{forloop.counter}}.  {{ userInfo.user.first_name|capfirst }} {{ userInfo.user.last_name|capfirst }}</div>
+           {% for studentDetail in sessionDetailList %}
+        <div>{{forloop.counter}}.  {{ studentDetail.student.user.first_name|capfirst }} {{ studentDetail.student.user.last_name|capfirst }}
+	{% for session in studentDetail.missingSessions %}
+		&nbsp;(start time: {{session}}),&nbsp; 
+	{% endfor %}
+	</div>
            {% endfor %}
     </div>
     {% else %}
