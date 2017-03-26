@@ -60,8 +60,6 @@ $(document).ready(function(){
             timeout:   4000 
         });
     
-
-
     $("#cloneSession-form").ajaxForm({ 
             success:       function(responseText){
                 console.log(responseText);
@@ -168,6 +166,11 @@ $(document).ready(function(){
     });
     
     
+    $("#oneSessionLoadbtn").click(function(){
+	var sessionID = $(this).data("options").sessionID;
+	w = window.open('/class/allSessionsPrint/'+sessionID);
+	w.print();
+    });
     
     $("#oneSessionLoadbtn").click(function(){
 	var sessionID = $(this).data("options").sessionID;

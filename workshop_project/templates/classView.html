@@ -85,7 +85,7 @@
         </div>
       {% elif sessions %}
               <table class="table table-striped" data-toggle="table" data-search="true" 
-        data-pagination="true">
+        data-pagination="true" data-sort-name="date" data-sort-order="asc">
                 <thead>
                   <tr>
                     <th data-field="date" data-sortable="true">Date <i class="fa fa-sort pull-right"></i></th>
@@ -221,6 +221,7 @@
       </div>
       <div class="modal-body modal-tweet">
         <form id="cloneSession-form" action="{% url classrooms.ajax.createGroup %}" enctype='multipart/form-data' method="post" autocomplete="off">{% csrf_token %}
+
           <div class="row">
             <div class="col-xs-12">
               <div class="form-group">
@@ -276,7 +277,6 @@
     </div>
   </div>
 </div>
-
 
 
 
