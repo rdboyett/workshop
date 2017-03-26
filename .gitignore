@@ -54,6 +54,8 @@ node_modules/
 
 # virtual environments
 .env
+venv/
+environ.py
 
 # User-uploaded media
 urlshortener_project/media/
@@ -70,5 +72,45 @@ staticfiles/
 #sqlite3
 *.sqlite3
 
-#venv
-venv/
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+logfile
+logfile.*
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+#Python created files #
+######################
+*.pyc
+
+
+# Media Directories #
+######################
+media/
+secrets/
+SCI/
