@@ -25,5 +25,6 @@ urlpatterns += patterns('workshop_project.views',
     (r'^studentView/(?P<studentID>\d+)/$', 'studentView'),
     (r'^classView/$', 'classView'),
     (r'^studentView/$', 'studentView'),
+    (r'^conferenceView/$', 'conferenceView'),
     
 )

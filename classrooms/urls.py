@@ -17,8 +17,11 @@ urlpatterns += patterns('classrooms.ajax',
     (r'^getNewMessages/$', 'getNewMessages'),
     (r'^addSession/$', 'addSession'),
     (r'^editSession/$', 'editSession'),
+    (r'^allSessionsPrint/(?P<sessionID>\d+)/$', 'allSessionsPrint'),
     (r'^allSessionsPrint/$', 'allSessionsPrint'),
     (r'^mySchedulePrint/(?P<userID>\d+)/$', 'mySchedulePrint'),
     (r'^mySchedulePrint/$', 'mySchedulePrint'),
+    (r'^unscheduled/$', 'unscheduled'),
+    (r'^forceAndToggleLock/$', 'forceAndToggleLock'),
     
 )

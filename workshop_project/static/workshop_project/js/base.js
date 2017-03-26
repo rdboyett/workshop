@@ -60,6 +60,21 @@ $(document).ready(function(){
             timeout:   4000 
         });
     
+
+
+    $("#cloneSession-form").ajaxForm({ 
+            success:       function(responseText){
+                console.log(responseText);
+                if (responseText.error) {
+                    alert(responseText.error);
+                }else{
+                    window.location.href = "/classView/"+responseText.groupID+"/";
+                }
+            },
+            dataType:  'json',
+            timeout:   4000 
+        });
+    
     
     
     
@@ -154,13 +169,71 @@ $(document).ready(function(){
     
     
     
+    $("#oneSessionLoadbtn").click(function(){
+	var sessionID = $(this).data("options").sessionID;
+	w = window.open('/class/allSessionsPrint/'+sessionID);
+	w.print();
+    });
     
     
     
     
+    $(".emptyClick").click(function(){
+	var date = $(this).data("options").date;
+	var startTime = $(this).parent().find('.startTime').html();
+	
+	var hours = Number(startTime.match(/^(\d+)/)[1]);
+	if (startTime.match(/:(\d+)/)==null) {
+	    var minutes = 0;
+	}else{
+	    var minutes = Number(startTime.match(/:(\d+)/)[1]);
+	}
+	
+	var AMPM = startTime.match(/\s(.*)$/)[1];
+	//console.log(AMPM);
+	if(AMPM == "p.m." && hours<12) hours = hours+12;
+	if(AMPM == "a.m." && hours==12) hours = hours-12;
+	var sHours = hours.toString();
+	var sMinutes = minutes.toString();
+	if(hours<10) sHours = "0" + sHours;
+	if(minutes<10) sMinutes = "0" + sMinutes;
+	startTime=sHours + ":" + sMinutes;
+	
+	//console.log(date);
+	//console.log(startTime);
+	
+	$("#createSession input[name='date']").val(date);
+	$("#createSession input[name='startTime']").val(startTime);
+	
+	var location = $(this).closest('table').find('th').eq($(this).index()).html();
+	//console.log(location);
+	$("#createSession input[name='location']").val(location);
+	
+	
+	$("#createSession").modal("show");
+    });
     
     
     
+    
+    $("#forceAndToggleLock-form").ajaxForm({ 
+	    beforeSubmit: function(){
+		$(".toggleLockBtn span").fadeOut(600, function(){
+		    $(".toggleLockBtn span").html('working...').fadeIn(600);
+		});
+		
+	    },
+            success:       function(responseText){
+                console.log(responseText);
+                if (responseText.error) {
+                    alert(responseText.error);
+                }else{
+                    window.location.href = "/conferenceView/";
+                }
+            },
+            dataType:  'json',
+            timeout:   10000 
+        });
     
     
     

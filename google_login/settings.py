@@ -12,7 +12,7 @@ SCOPES = [
 ]
 
 #Change the redirect uri for your project
-redirect_uri='http://127.0.0.1:8000/google/oauth2callback'
+redirect_uri='http://workshop.alvaradoisd.net/google/oauth2callback'
 
 #Login Success redirect
 LOGIN_SUCCESS = '/dashboard/'
@@ -24,9 +24,9 @@ SECRET_KEY = 't(641aasfrv6^^-1sj$uzq(fskmd%+!33199$axb1hu(2i_2n='
 #make sure this email is matched up to the project email settings.py
 WEBMASTER_EMAIL = 'rdboyett@gmail.com'
 
-WEBSITENAME = 'AISD Directory'
+WEBSITENAME = 'Indian Workshop'
 
-ROOT_WEBSITE_LINK = 'http://127.0.0.1:8000'
+ROOT_WEBSITE_LINK = 'http://workshop.alvaradoisd.net'
 
 # Use an email address ending to block allow only users
 BLOCK_ALL_USERS = False

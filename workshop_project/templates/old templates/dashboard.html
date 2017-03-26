@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load adminUser_tags %}
-{% load my_tags %}
 
     {% block title %}Indian Workshop | dashboard{% endblock %}
 
@@ -9,7 +7,7 @@
 {% block body %}
         <h1>My Schedule</h1>
         
-        {% if user.email|isAdminUser %}
+        {% if user.email == 'jholland@alvaradoisd.net' or user.email == 'jhenderson@alvaradoisd.net' or user.email == 'rboyett@alvaradoisd.net' %}
         <div class="btn btn-success" data-toggle="modal" data-target="#createSession">create a new session</div>
         {% endif %}
         <a href="{% url workshop_project.views.classView %}" class="btn btn-warning">explore sessions</a>
@@ -54,36 +52,6 @@
             {% else %}
               Sorry, you have now sessions scheduled.
               <a href="{% url workshop_project.views.classView %}" class="btn btn-warning">find a session</a>
-            {% endif %}
-            
-            
-            
-            
-            {% if availableTimeSlots %}
-              <table class="table table-striped">
-                <tbody>
-                  <thead>
-                    <span class="text-warning">Looks like you need more sessions...</span>
-                  </thead>
-                  {% for session in availableTimeSlots %}
-                  <tr>
-                    <td>You need to add a session for <span class="text-danger">{{ session.classDate|date }}</span> from <span class="text-danger">{{session.startTime|time}} to {{session.endTime|time}}</span></td>
-                    <td>
-                      <form action="{% url workshop_project.views.classView %}" enctype='multipart/form-data' method="post" autocomplete="off">{% csrf_token %}
-                        <input type="hidden" name="date" value="{{session.classDate|html5Date}}">
-                        <input type="hidden" name="startTime" value="{{session.startTime|time:"H:i:s"}}">
-                        <button type="submit" class="btn btn-danger">find a session</button>
-                      </form>
-                      
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            {% else %}
-              {% if mySessions %}
-                <h4 class="text-success">Congratulations!  You have completed your schedule!</h4>
-              {% endif %}
             {% endif %}
             </div>
       </div>
