@@ -65,8 +65,10 @@ tests/.hitch
 mailhog
 
 #migration files
-migrations/
 staticfiles/
 
 #sqlite3
 *.sqlite3
+
+#venv
+venv/
