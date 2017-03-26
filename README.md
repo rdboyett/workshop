@@ -7,7 +7,7 @@
 
 1. Install global dependencies
 
-        sudo easy_install virtualenv virtualenvwrapper
+        sudo easy_install virtualenv
 
 1. Run setup script
 
