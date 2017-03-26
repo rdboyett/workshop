@@ -7,7 +7,7 @@ import httplib2
 from datetime import datetime, timedelta
 
 from django.shortcuts import render_to_response
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
