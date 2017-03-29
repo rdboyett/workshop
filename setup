@@ -14,6 +14,6 @@ ln -sf venv/workshop/bin/activate activate-workshop
 chmod 755 activate-workshop
 
 echo -e "${CYAN}Run command \`${RESET}source activate-workshop${CYAN}\` to activate the virtualenv,${RESET}"
-echo -e "${CYAN}run \`${RESET}python manage.py migrate${CYAN}\` to create your database.${RESET}"
+echo -e "${CYAN}run \`${RESET}python manage.py syncdb${CYAN}\` to create your database.${RESET}"
 echo -e "${CYAN}run \`${RESET}python manage.py createsuperuser${CYAN}\` to create your super user.${RESET}"
 echo -e "${CYAN}run \`${RESET}python manage.py runserver${CYAN}\` to start your application.${RESET}"
