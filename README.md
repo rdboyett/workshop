@@ -21,7 +21,7 @@
 
 1. Run django
 
-        python manage.py migrate (to create your local database)
+        python manage.py syncdb (to create your local database)
         python manage.py createsuperuser (to create your admin user)
         python manage.py runserver
 
