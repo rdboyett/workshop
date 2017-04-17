@@ -52,7 +52,7 @@
                 </tbody>
               </table>
             {% else %}
-              Sorry, you have now sessions scheduled.
+              Sorry, you have no sessions scheduled.
               <a href="{% url workshop_project.views.classView %}" class="btn btn-warning">find a session</a>
             {% endif %}
 
@@ -99,7 +99,7 @@
                   <tr>
                     <td>You need to add a session for <span class="text-danger">{{ session.classDate|date }}</span> from <span class="text-danger">{{session.startTime|time}} to {{session.endTime|time}}</span></td>
                     <td>
-                      <form action="{% url "workshop_project.views.classView" %}" enctype='multipart/form-data' method="post" autocomplete="off">{% csrf_token %}
+                      <form action="{% url workshop_project.views.classView %}" enctype='multipart/form-data' method="post" autocomplete="off">{% csrf_token %}
                         <input type="hidden" name="date" value="{{session.classDate|html5Date}}">
                         <input type="hidden" name="startTime" value="{{session.startTime|time:"H:i:s"}}">
                         <button type="submit" class="btn btn-danger">find a session</button>
